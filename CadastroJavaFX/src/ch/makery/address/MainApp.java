@@ -23,18 +23,18 @@ public class MainApp extends Application {
 
         showPersonOverview();
     }
-
+    
     /**
-     * Inicializa o root layout (layout base).
+     * Initializes the root layout.
      */
     public void initRootLayout() {
         try {
-            // Carrega o root layout do arquivo fxml.
+            // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
-
-            // Mostra a scene (cena) contendo oroot layout.
+            
+            // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -44,29 +44,29 @@ public class MainApp extends Application {
     }
 
     /**
-     * Mostra o person overview dentro do root layout.
+     * Shows the person overview inside the root layout.
      */
     public void showPersonOverview() {
         try {
-            // Carrega o person overview.
+            // Load person overview.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/PersonOverview.fxml"));
             AnchorPane personOverview = (AnchorPane) loader.load();
-
-            // Define o person overview dentro do root layout.
+            
+            // Set person overview into the center of root layout.
             rootLayout.setCenter(personOverview);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    /**
-     * Retorna o palco principal.
-     * @return
-     */
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
+    
+	/**
+	 * Returns the main stage.
+	 * @return
+	 */
+	public Stage getPrimaryStage() {
+		return primaryStage;
+	}
 
     public static void main(String[] args) {
         launch(args);
