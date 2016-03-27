@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persons>
+    <person>
+        <birthday/>
+        <city>testecity</city>
+        <firstName>teste</firstName>
+        <lastName>teste</lastName>
+        <postalCode>215155</postalCode>
+        <street>testerua</street>
+    </person>
+</persons>
