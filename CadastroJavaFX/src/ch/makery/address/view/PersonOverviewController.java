@@ -1,14 +1,15 @@
 package ch.makery.address.view;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 
 import org.controlsfx.dialog.Dialogs;
 
 import ch.makery.address.MainApp;
 import ch.makery.address.model.Person;
-import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import ch.makery.address.util.DateUtil;
 
 public class PersonOverviewController {
     @FXML
@@ -30,24 +31,6 @@ public class PersonOverviewController {
     private Label cityLabel;
     @FXML
     private Label birthdayLabel;
-    
-    @FXML
-    private void handleDeletePerson(){
-    	int selectedIndex = personTable.getSelectionModel().getSelectedIndex();
-    	if (selectedIndex >= 0){
-    		personTable.getItems().remove(selectedIndex);	
-    	}else{
-    		Dialogs.create()
-    		.title("Nenhuma Seleção")
-    		.masthead("Nenhuma Pessoa Selecionada")
-    		.message("Por Favor, Selecione uma pessoa na tabela.")
-    		.showWarning();
-    		
-    	}
-    	
-    	
-    }
-    
 
     // Reference to the main application.
     private MainApp mainApp;
@@ -65,18 +48,18 @@ public class PersonOverviewController {
      */
     @FXML
     private void initialize() {
-        // Inicializa a tabela de pessoas com duas colunas.
+    	// Initialize the person table with the two columns.
         firstNameColumn.setCellValueFactory(
-                cellData -> cellData.getValue().firstNameProperty());
+        		cellData -> cellData.getValue().firstNameProperty());
         lastNameColumn.setCellValueFactory(
-                cellData -> cellData.getValue().lastNameProperty());
+        		cellData -> cellData.getValue().lastNameProperty());
+        
+        // Clear person details.
+        showPersonDetails(null);
 
-        // Limpa os detalhes da pessoa.
-        showPersonDetail(null);
-
-        // Detecta mudanças de seleção e mostra os detalhes da pessoa quando houver mudança.
-        personTable.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> showPersonDetail(newValue));
+        // Listen for selection changes and show the person details when changed.
+		personTable.getSelectionModel().selectedItemProperty().addListener(
+				(observable, oldValue, newValue) -> showPersonDetails(newValue));
     }
 
     /**
@@ -90,54 +73,84 @@ public class PersonOverviewController {
         // Add observable list data to the table
         personTable.setItems(mainApp.getPersonData());
     }
+    
+    /**
+     * Fills all text fields to show details about the person.
+     * If the specified person is null, all text fields are cleared.
+     * 
+     * @param person the person or null
+     */
+    private void showPersonDetails(Person person) {
+    	if (person != null) {
+    		// Fill the labels with info from the person object.
+    		firstNameLabel.setText(person.getFirstName());
+    		lastNameLabel.setText(person.getLastName());
+    		streetLabel.setText(person.getStreet());
+    		postalCodeLabel.setText(Integer.toString(person.getPostalCode()));
+    		cityLabel.setText(person.getCity());
+    		birthdayLabel.setText(DateUtil.format(person.getBirthday()));
+    	} else {
+    		// Person is null, remove all the text.
+    		firstNameLabel.setText("");
+    		lastNameLabel.setText("");
+    		streetLabel.setText("");
+    		postalCodeLabel.setText("");
+    		cityLabel.setText("");
+    		birthdayLabel.setText("");
+    	}
+    }
 
- private void showPersonDetail(Person person){
-	 
-	 if(person!= null){
-		 
-		 firstNameLabel.setText(person.getFirstName());
-		 lastNameLabel.setText(person.getFirstName());
-		 streetLabel.setText(person.getStreet());
-		 postalCodeLabel.setText(Integer.toString(person.getPostalCode()));
-		 cityLabel.setText(person.getCity());
-		 
-	  }else {
-		  
-		  firstNameLabel.setText(" ");
-		  lastNameLabel.setText(" ");
-		  streetLabel.setText(" ");
-		  postalCodeLabel.setText(" ");
-		  cityLabel.setText(" ");
-		  birthdayLabel.setText(" ");
-	 }
-	  
-	 
- }
- @FXML
- private void handleNewPerson() {
-     Person tempPerson = new Person();
-     boolean okClicked = mainApp.showPersonEditDialog(tempPerson);
-     if (okClicked) {
-         mainApp.getPersonData().add(tempPerson);
-     }
- }
+	/**
+	 * Called when the user clicks on the delete button.
+	 */
+	@FXML
+	private void handleDeletePerson() {
+		int selectedIndex = personTable.getSelectionModel().getSelectedIndex();
+		if (selectedIndex >= 0) {
+			personTable.getItems().remove(selectedIndex);
+		} else {
+			// Nothing selected.
+			Dialogs.create()
+		        .title("No Selection")
+		        .masthead("No Person Selected")
+		        .message("Please select a person in the table.")
+		        .showWarning();
+		}
+	}
+	
+	/**
+	 * Called when the user clicks the new button. Opens a dialog to edit
+	 * details for a new person.
+	 */
+	@FXML
+	private void handleNewPerson() {
+		Person tempPerson = new Person();
+		boolean okClicked = mainApp.showPersonEditDialog(tempPerson);
+		if (okClicked) {
+			mainApp.getPersonData().add(tempPerson);
+		}
+	}
 
- @FXML
- private void handleEditPerson() {
-     Person selectedPerson = personTable.getSelectionModel().getSelectedItem();
-     if (selectedPerson != null) {
-         boolean okClicked = mainApp.showPersonEditDialog(selectedPerson);
-         if (okClicked) {
-             showPersonDetail(selectedPerson);
-         }
+	/**
+	 * Called when the user clicks the edit button. Opens a dialog to edit
+	 * details for the selected person.
+	 */
+	@FXML
+	private void handleEditPerson() {
+		Person selectedPerson = personTable.getSelectionModel().getSelectedItem();
+		if (selectedPerson != null) {
+			boolean okClicked = mainApp.showPersonEditDialog(selectedPerson);
+			if (okClicked) {
+				showPersonDetails(selectedPerson);
+			}
 
-     } else {
-         // Nada seleciondo.
-         Dialogs.create()
-             .title("Nenhuma seleção")
-             .masthead("Nenhuma Pessoa Selecionada")
-             .message("Por favor, selecione uma pessoa na tabela.")
-             .showWarning();
-     }
- }
+		} else {
+			// Nothing selected.
+			Dialogs.create()
+				.title("No Selection")
+				.masthead("No Person Selected")
+				.message("Please select a person in the table.")
+				.showWarning();
+		}
+	}
 }
