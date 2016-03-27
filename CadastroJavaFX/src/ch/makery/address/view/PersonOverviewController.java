@@ -1,16 +1,14 @@
 package ch.makery.address.view;
 
+
+import org.controlsfx.dialog.Dialogs;
+
+import ch.makery.address.MainApp;
+import ch.makery.address.model.Person;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-
-import org.controlsfx.dialog.Dialogs;
-
-import com.sun.javafx.scene.control.SelectedCellsMap;
-
-import ch.makery.address.MainApp;
-import ch.makery.address.model.Person;
 
 public class PersonOverviewController {
     @FXML
@@ -115,6 +113,31 @@ public class PersonOverviewController {
 	  
 	 
  }
- 
+ @FXML
+ private void handleNewPerson() {
+     Person tempPerson = new Person();
+     boolean okClicked = mainApp.showPersonEditDialog(tempPerson);
+     if (okClicked) {
+         mainApp.getPersonData().add(tempPerson);
+     }
+ }
 
+ @FXML
+ private void handleEditPerson() {
+     Person selectedPerson = personTable.getSelectionModel().getSelectedItem();
+     if (selectedPerson != null) {
+         boolean okClicked = mainApp.showPersonEditDialog(selectedPerson);
+         if (okClicked) {
+             showPersonDetail(selectedPerson);
+         }
+
+     } else {
+         // Nada seleciondo.
+         Dialogs.create()
+             .title("Nenhuma seleção")
+             .masthead("Nenhuma Pessoa Selecionada")
+             .message("Por favor, selecione uma pessoa na tabela.")
+             .showWarning();
+     }
+ }
 }
