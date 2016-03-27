@@ -60,4 +60,29 @@ public class PersonOverviewController {
         // Add observable list data to the table
         personTable.setItems(mainApp.getPersonData());
     }
-}
+
+ private void showPersonDetail(final Person person){
+	 
+	 if(person!= null){
+		 
+		 firstNameLabel.setText(person.getFirstName());
+		 lastNameLabel.setText(person.getFirstName());
+		 streetLabel.setText(person.getStreet());
+		 postalCodeLabel.setText(Integer.toString(person.getPostalCode()));
+		 cityLabel.setText(person.getCity());
+		 
+	  }else {
+		  
+		  firstNameLabel.setText(" ");
+		  lastNameLabel.setText(" ");
+		  streetLabel.setText(" ");
+		  postalCodeLabel.setText(" ");
+		  cityLabel.setText(" ");
+		  birthdayLabel.setText(" ");
+		 
+	 }
+	 
+	 
+	 
+	 
+ }}
