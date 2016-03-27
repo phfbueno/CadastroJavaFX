@@ -32,32 +32,32 @@ public class PersonOverviewController {
     private MainApp mainApp;
 
     /**
-     * O construtor.
-     * O construtor é chamado antes do método inicialize().
+     * The constructor.
+     * The constructor is called before the initialize() method.
      */
     public PersonOverviewController() {
     }
 
     /**
-     * Inicializa a classe controller. Este método é chamado automaticamente
-     *  após o arquivo fxml ter sido carregado.
+     * Initializes the controller class. This method is automatically called
+     * after the fxml file has been loaded.
      */
     @FXML
     private void initialize() {
-        // Inicializa a tablea de pessoa com duas colunas.
+    	// Initialize the person table with the two columns.
         firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
     }
 
     /**
-     * É chamado pela aplicação principal para dar uma referência de volta a si mesmo.
+     * Is called by the main application to give a reference back to itself.
      * 
      * @param mainApp
      */
     public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
 
-        // Adiciona os dados da observable list na tabela
+        // Add observable list data to the table
         personTable.setItems(mainApp.getPersonData());
     }
 }

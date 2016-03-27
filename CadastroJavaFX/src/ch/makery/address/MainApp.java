@@ -2,8 +2,6 @@ package ch.makery.address;
 
 import java.io.IOException;
 
-import ch.makery.address.model.Person;
-import ch.makery.address.view.PersonOverviewController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,26 +10,21 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import ch.makery.address.model.Person;
+import ch.makery.address.view.PersonOverviewController;
 
 public class MainApp extends Application {
-	
 
     private Stage primaryStage;
     private BorderPane rootLayout;
-
-    @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("AddressApp");
-
-        initRootLayout();
-
-        showPersonOverview();
-    }
+    
+    /**
+     * The data as an observable list of Persons.
+     */
     private ObservableList<Person> personData = FXCollections.observableArrayList();
 
     /**
-     * Construtor
+     * Constructor
      */
     public MainApp() {
         // Add some sample data
@@ -47,12 +40,23 @@ public class MainApp extends Application {
     }
 
     /**
-     * Retorna os dados como uma observable list de Persons. 
+     * Returns the data as an observable list of Persons. 
      * @return
      */
     public ObservableList<Person> getPersonData() {
         return personData;
     }
+
+    @Override
+    public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("AddressApp");
+
+        initRootLayout();
+
+        showPersonOverview();
+    }
+    
     /**
      * Initializes the root layout.
      */
@@ -70,8 +74,6 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        
     }
 
     /**
@@ -79,18 +81,18 @@ public class MainApp extends Application {
      */
     public void showPersonOverview() {
         try {
-            // Carrega a person overview.
+            // Load person overview.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/PersonOverview.fxml"));
             AnchorPane personOverview = (AnchorPane) loader.load();
-
-            // Define a person overview no centro do root layout.
+            
+            // Set person overview into the center of root layout.
             rootLayout.setCenter(personOverview);
-
-            // Dá ao controlador acesso à the main app.
+            
+            // Give the controller access to the main app.
             PersonOverviewController controller = loader.getController();
             controller.setMainApp(this);
-
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,4 +110,3 @@ public class MainApp extends Application {
         launch(args);
     }
 }
-
