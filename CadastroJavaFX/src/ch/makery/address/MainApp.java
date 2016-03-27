@@ -24,6 +24,7 @@ import ch.makery.address.model.Person;
 import ch.makery.address.model.PersonListWrapper;
 import ch.makery.address.view.PersonEditDialogController;
 import ch.makery.address.view.PersonOverviewController;
+import ch.makery.address.view.RootLayoutController;
 
 public class MainApp extends Application {
 
@@ -68,20 +69,31 @@ public class MainApp extends Application {
      */
     public void initRootLayout() {
         try {
-            // Load root layout from fxml file.
+            // Carrega o root layout do arquivo fxml.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
+            loader.setLocation(MainApp.class
+                    .getResource("view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
-            
-            // Show the scene containing the root layout.
+
+            // Mostra a scene (cena) contendo o root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
+
+            // Dá ao controller o acesso ao main app.
+            RootLayoutController controller = loader.getController();
+            controller.setMainApp(this);
+
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
 
+        // Tenta carregar o último arquivo de pessoa aberto.
+        File file = getPersonFilePath();
+        if (file != null) {
+            loadPersonDataFromFile(file);
+        }
+    }
     /**
      * Shows the person overview inside the root layout.
      */
