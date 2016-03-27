@@ -4,6 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.sun.javafx.scene.control.SelectedCellsMap;
+
 import ch.makery.address.MainApp;
 import ch.makery.address.model.Person;
 
@@ -27,6 +32,24 @@ public class PersonOverviewController {
     private Label cityLabel;
     @FXML
     private Label birthdayLabel;
+    
+    @FXML
+    private void handleDeletePerson(){
+    	int selectedIndex = personTable.getSelectionModel().getSelectedIndex();
+    	if (selectedIndex >= 0){
+    		personTable.getItems().remove(selectedIndex);	
+    	}else{
+    		Dialogs.create()
+    		.title("Nenhuma Seleção")
+    		.masthead("Nenhuma Pessoa Selecionada")
+    		.message("Por Favor, Selecione uma pessoa na tabela.")
+    		.showWarning();
+    		
+    	}
+    	
+    	
+    }
+    
 
     // Reference to the main application.
     private MainApp mainApp;
@@ -44,9 +67,18 @@ public class PersonOverviewController {
      */
     @FXML
     private void initialize() {
-    	// Initialize the person table with the two columns.
-        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
-        lastNameColumn.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+        // Inicializa a tabela de pessoas com duas colunas.
+        firstNameColumn.setCellValueFactory(
+                cellData -> cellData.getValue().firstNameProperty());
+        lastNameColumn.setCellValueFactory(
+                cellData -> cellData.getValue().lastNameProperty());
+
+        // Limpa os detalhes da pessoa.
+        showPersonDetail(null);
+
+        // Detecta mudanças de seleção e mostra os detalhes da pessoa quando houver mudança.
+        personTable.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> showPersonDetail(newValue));
     }
 
     /**
@@ -61,7 +93,7 @@ public class PersonOverviewController {
         personTable.setItems(mainApp.getPersonData());
     }
 
- private void showPersonDetail(final Person person){
+ private void showPersonDetail(Person person){
 	 
 	 if(person!= null){
 		 
@@ -79,10 +111,10 @@ public class PersonOverviewController {
 		  postalCodeLabel.setText(" ");
 		  cityLabel.setText(" ");
 		  birthdayLabel.setText(" ");
-		 
 	 }
+	  
 	 
-	 
-	 
-	 
- }}
+ }
+ 
+
+}
